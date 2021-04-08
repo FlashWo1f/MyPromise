@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src='./test1.js'></script>
+  <script>
+    const p1 = new LPromise((resolve, reject) => {
+      reject('拒绝')
+    }).then(res => {
+      return new LPromise(resolve => {
+        console.log(bucunzai)
+        resolve('返回的Promise')
+      })
+    }, (reason) => {
+      return new LPromise((resolve, reject) => {
+        // todo  这里 resolve reject 变换 逻辑的走位
+        // done => 因为是 reject('拒绝') this.status === REJECTED  这里走到 test1.js 的 L75, 因为result 是LPromise的实例
+        // 所以 result.then(resolve, reject) ==> result 这个结果的返回值也就是包含这段注释的这个函数的返回值 (new LPromise)
+        // 因为 是  reject('返回的Promise') 所以 会执行 result.then(_, reject) 这个第二个回调, 所以这个 new LPromise 的状态也会是 reject
+        reject('返回的Promise')
+      })
+    }).then(res => {
+      console.log('resolve', res)
+    }, reason => {
+      console.log('reject', reason)
+    })
+
+  </script>
+</body>
+</html>
