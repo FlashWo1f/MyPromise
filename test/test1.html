@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src='./test1.js'></script>
+  <script>
+    const p = new LPromise((resolve, reject) => {
+      console.log(1)
+      resolve(3)
+    }).then(
+      res => {
+        console.log(res)
+        // 这边错误被 try catch 捕获到 
+        return LPromise.resolve(3)
+      },
+      err => console.log(err)
+    )
+      .then(
+        res => {
+          console.log(res)
+          return 5
+        },
+        err => console.log(err)
+      )
+      .then(
+        res => {
+          console.log(res)
+          return 6
+        },
+        err => console.log(err)
+      )
+      .then(res => {
+        console.log(res)
+      },
+        err => console.log(err)
+      )
+    console.log(2)
+  </script>
+</body>
+
+</html>
