@@ -57,3 +57,18 @@ const p1 = new promise((resolve, reject) => {
   console.log('reject', reason)
 })
 ```
+
+### tip4
+
+Promise.then 中不可再返回本身
+
+```js
+const p = new Promise((resolve, reject) => {
+  resolve(1)
+})
+const a = p.then(res => {
+  return a
+})
+// console.error("Uncaught (in promise) TypeError: Chaining cycle detected for promise #<Promise>")
+```
+

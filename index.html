@@ -35,29 +35,36 @@
 
     console.log('-----------------------------------------')
 
-    const p1 = new LPromise((resolve, reject) => {
-      // resolve('解决')
-      reject('拒绝')
-    }).then(res => {
-      return new LPromise(resolve => {
-        console.log(bucunzai)
-        resolve('返回的Promise')
-      })
-    }, (reason) => {
-      return new LPromise((resolve, reject) => {
-        // console.log(bucunzai111)
-        resolve('返回的Promise')
-      })
-    }).then(res => {
-      console.log('resolve', res)
-    }, reason => {
-      console.log('reject', reason)
-    })
+    // const p1 = new LPromise((resolve, reject) => {
+    //   // resolve('解决')
+    //   reject('拒绝')
+    // }).then(res => {
+    //   return new LPromise(resolve => {
+    //     console.log(bucunzai)
+    //     resolve('返回的Promise')
+    //   })
+    // }, (reason) => {
+    //   return new LPromise((resolve, reject) => {
+    //     // console.log(bucunzai111)
+    //     resolve('返回的Promise')
+    //   })
+    // }).then(res => {
+    //   console.log('resolve', res)
+    // }, reason => {
+    //   console.log('reject', reason)
+    // })
     // .then(null, reason => {
     //   console.log('rejeczzz', reason)
     // })
 
     // console.log('22')
+
+    const p = new LPromise((resolve, reject) => {
+      resolve(1)
+    })
+    const a = p.then(res => {
+      return a
+    })
   </script>
 </body>
 </html>

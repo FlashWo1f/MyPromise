@@ -13,11 +13,11 @@ class LPromise {
     this.value = undefined
     this.reason = undefined
     this.callbacks = []
-    try {
-      executor(this.resolve, this.reject)
-    } catch (error) {
-      this.reject(error)
-    }
+    // try {
+    executor(this.resolve, this.reject)
+    // } catch (error) {
+    //   this.reject(error)
+    // }
   }
 
   resolve = (value) => {
@@ -44,35 +44,47 @@ class LPromise {
     // 如果不传  为了能穿透  给个默认函数
     const realOnFulfilled = isFn(onFulfilled) ? onFulfilled : value => value;
     const realOnRejected = isFn(onRejected) ? onRejected : reason => { throw reason };
-    return new LPromise((resolve, reject) => {
+    let p1 = new LPromise((resolve, reject) => {
+      // debugger
       if (this.status === FULFILLDE) {
-        this.parse(realOnFulfilled(this.value), resolve, reject)
+        queueMicrotask(() => {
+          this.parse(p1, realOnFulfilled(this.value), resolve, reject)
+        })
       } else if (this.status === REJECTED) {
-        this.parse(realOnRejected(this.reason), resolve, reject)
+        queueMicrotask(() => {
+          this.parse(p1, realOnRejected(this.reason), resolve, reject)
+        })
       } else {
         this.callbacks.push({
           onFulfilled: (value) => {
-            this.parse(realOnFulfilled(value), resolve, reject)
+            queueMicrotask(() => {
+              this.parse(p1, realOnFulfilled(value), resolve, reject)
+            })
           },
           onRejected: (reason) => {
-            this.parse(realOnRejected(reason), resolve, reject)
+            queueMicrotask(() => {
+              this.parse(p1, realOnRejected(reason), resolve, reject)
+            })
           }
         })
       }
     })
+    return p1
   }
 
-  parse = (result, resolve, reject) => {
-    queueMicrotask(() => {
-      try {
-        if (result instanceof LPromise) {
-          result.then(resolve, reject)
-        } else {
-          resolve(result)
-        }
-      } catch (error) {
-        reject(error)
+  parse = (p1, result, resolve, reject) => {
+    // debugger
+    if (p1 === result) {
+      throw new TypeError("Chaining cycle detected for promise")
+    }
+    try {
+      if (result instanceof LPromise) {
+        result.then(resolve, reject)
+      } else {
+        resolve(result)
       }
-    })
+    } catch (error) {
+      reject(error)
+    }
   }
 }
