@@ -28,3 +28,32 @@ const p1 = new LPromise((resolve, reject) => {
 })
 ```
 
+### tip3 也就是 problem1.html 中的 todo
+
+返回的 一开始我想不通 为什么不是 resolve 返回的Promise 而是 reject 返回的Promise 呢
+不是在链式调用的时候 都是用的 resolve 吗
+
+原来 const result = realOnRejected(this.reason) 中 result 状态是 REJECTED 了 那自然 result.then(resolve, reject) 会执行第二个回调咯
+这也是设计的精妙之处，符合我们用 Promise 的习惯
+```js
+const p1 = new promise((resolve, reject) => {
+  reject('拒绝')
+})
+.then(
+  res => {
+    return new LPromise(resolve => {
+      resolve('返回的Promise')
+    })
+  },
+  err => {
+    return new LPromise((resolve, reject) => {
+      // todo  这里 resolve reject 变换 逻辑的走位
+      reject('返回的Promise')
+    })
+  }
+).then(res => {
+  console.log('resolve', res)
+}, reason => {
+  console.log('reject', reason)
+})
+```
