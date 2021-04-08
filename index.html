@@ -68,15 +68,44 @@
     // })
 
     console.log('-----------------------------------------')
-    let p = new LPromise((resolve, reject) => {
-      // resolve("成功")
-      reject("失败11")
+    // let p = new LPromise((resolve, reject) => {
+    //   // resolve("成功")
+    //   reject("失败11")
+    // })
+
+    // LPromise.reject(p).then(
+    //   res => console.log(res),
+    //   err => console.error(err),
+    // )
+    console.log('-----------------------------------------')
+
+    // const all1 = new LPromise((resolve, reject) => {
+    //   resolve(1)
+    // })
+    // const all2 = new LPromise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     resolve(2)
+    //   }, 1000)
+    // })
+    // let all = LPromise.all([all1, all2]).then(res => {
+    //   console.log('全部成功', res)
+    // })
+    console.log('-----------------------------------------')
+
+    const all1 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(1)
+      }, 300)
+    })
+    const all2 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(2)
+      }, 1000)
     })
 
-    LPromise.reject(p).then(
-      res => console.log(res),
-      err => console.error(err),
-    )
+    let race = LPromise.race([all1, all2]).then(res => {
+      console.log('跑得快', res)
+    })
   </script>
 </body>
 </html>

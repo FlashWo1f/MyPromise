@@ -106,4 +106,34 @@ class LPromise {
       reject(value)
     })
   }
+
+  static all = (promises) => {
+    const values = []
+    return new LPromise((resolve, reject) => {
+      promises.forEach(p => {
+        p.then(
+          value => {
+            values.push(value)
+            // 所有都 reject
+            if (values.length === promises.length) {
+              resolve(values)
+            }
+          },
+          // 但凡一个 拒绝 那么就 reject all 这个 Promise
+          reason => reject(reason)
+        )
+      })
+    })
+  }
+
+  static race = (promises) => {
+    return new LPromise((resolve, reject) => {
+      promises.forEach(p => {
+        p.then(
+          value => resolve(value),
+          reason => reject(reason),
+        )
+      })
+    })
+  }
 }
