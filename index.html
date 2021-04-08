@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src='./index.js'></script>
+  <script>
+    // setTimeout(() => {
+    //   console.log('log in setTimeout')
+    // }, 0)
+
+    // const p = new LPromise((resolve, reject) => {
+    //   // resolve('解决')
+    //   // setTimeout(() => {
+        
+    //   //   resolve('拒绝')
+    //   //   console.log('setIMT')
+    //   // }, 1000)
+    //   resolve('拒绝')
+    //   // console.log('bottom')
+    // }).then(res => {
+    //   console.log(res)
+    //   return res + '1'
+    // }, (reason) => {
+    //   console.log(reason)
+    // }).then().then(res => {
+    //   console.log(res)
+    // }, (reason) => {
+    //   console.log(reason)
+    // })
+
+    console.log('-----------------------------------------')
+
+    const p1 = new LPromise((resolve, reject) => {
+      // resolve('解决')
+      reject('拒绝')
+    }).then(res => {
+      return new LPromise(resolve => {
+        console.log(bucunzai)
+        resolve('返回的Promise')
+      })
+    }, (reason) => {
+      return new LPromise((resolve, reject) => {
+        // console.log(bucunzai111)
+        // todo  这里 resolve reject 变换 逻辑的走位
+        resolve('返回的Promise')
+      })
+    }).then(res => {
+      console.log('resolve', res)
+    }, reason => {
+      console.log('reject', reason)
+    })
+    // .then(null, reason => {
+    //   console.log('rejeczzz', reason)
+    // })
+
+    // console.log('22')
+  </script>
+</body>
+</html>
