@@ -1,3 +1,5 @@
+// 精简 .then
+
 const FULFILLDE = 'fulfilled'
 const REJECTED = 'rejected'
 const PENDING = 'pending'
