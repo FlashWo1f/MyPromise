@@ -59,12 +59,24 @@
 
     // console.log('22')
 
-    const p = new LPromise((resolve, reject) => {
-      resolve(1)
+    console.log('-----------------------------------------')
+    // const p = new LPromise((resolve, reject) => {
+    //   resolve(1)
+    // })
+    // const a = p.then(res => {
+    //   return a
+    // })
+
+    console.log('-----------------------------------------')
+    let p = new LPromise((resolve, reject) => {
+      // resolve("成功")
+      reject("失败11")
     })
-    const a = p.then(res => {
-      return a
-    })
+
+    LPromise.reject(p).then(
+      res => console.log(res),
+      err => console.error(err),
+    )
   </script>
 </body>
 </html>

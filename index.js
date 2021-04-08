@@ -87,4 +87,23 @@ class LPromise {
       reject(error)
     }
   }
+
+  static resolve = (value) => {
+    // if (value instanceof LPromise) {
+    //   return value
+    // }
+    return new LPromise((resolve, reject) => {
+      if (value instanceof LPromise) {
+        value.then(resolve, reject)
+      } else {
+        resolve(value)
+      }
+    })
+  }
+
+  static reject = (value) => {
+    return new LPromise((resolve, reject) => {
+      reject(value)
+    })
+  }
 }

@@ -71,4 +71,6 @@ const a = p.then(res => {
 })
 // console.error("Uncaught (in promise) TypeError: Chaining cycle detected for promise #<Promise>")
 ```
+### 困惑
 
+static resolve 中两种写法...
