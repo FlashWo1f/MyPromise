@@ -1,7 +1,7 @@
 const FULFILLDE = 'fulfilled'
 const REJECTED = 'rejected'
 const PENDING = 'pending'
-
+let uid = 0
 function isFn(v) {
   return typeof v === 'function'
 }
@@ -13,6 +13,7 @@ class LPromise {
     this.value = undefined
     this.reason = undefined
     this.callbacks = []
+    this.uid = uid++
     // try {
     executor(this.resolve, this.reject)
     // } catch (error) {
@@ -40,6 +41,10 @@ class LPromise {
     }
   }
 
+  catch = (onRejected) => {
+    return this.then(val => val, onRejected)
+  }
+
   then = (onFulfilled, onRejected) => {
     // 如果不传  为了能穿透  给个默认函数
     const realOnFulfilled = isFn(onFulfilled) ? onFulfilled : value => value;
@@ -58,6 +63,7 @@ class LPromise {
         this.callbacks.push({
           onFulfilled: (value) => {
             queueMicrotask(() => {
+              // 这里的 realOnFulfilled(this.value) 也可以 由 resolve 方法可得
               this.parse(p1, realOnFulfilled(value), resolve, reject)
             })
           },
@@ -78,6 +84,7 @@ class LPromise {
       throw new TypeError("Chaining cycle detected for promise")
     }
     try {
+      debugger
       if (result instanceof LPromise) {
         result.then(resolve, reject)
       } else {
