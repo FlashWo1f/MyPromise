@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../index.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 在 parse 函数中 debugger
+    // 对应 readme tip2
+    const p = new LPromise((resolve, reject) => {
+      console.log('1')
+      resolve(2)
+    }).then(res => {
+      console.log(res)
+      return new LPromise((solve, ject) => {
+        setTimeout(() => {
+          solve(4)
+        }, 300)
+      })
+    }).then(res => {
+      console.log(res)
+    }) 
+  </script>
+</body>
+</html>
