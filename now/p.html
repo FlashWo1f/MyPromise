@@ -1,0 +1,18 @@
+<script src="./index.js"></script>
+
+<script>
+  const pro = new LPromise((resolve, reject) => {
+    resolve(1)
+  }).then(res => {
+    console.log('then', res)
+    // debugger
+    return new LPromise((reso, rej) => reso(2))
+  }).then(res => {
+    console.log('then222', res)
+  })
+  new LPromise((reso, rej) => reso(2))
+    .then(e => e)
+    .then(res => {
+      console.log('then222', res)
+    })
+</script>

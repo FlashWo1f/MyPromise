@@ -25,7 +25,11 @@ class LPromise {
     this.reason = null
     this.uid = uid++
     this.callback = []
-    executor(this.resolve, this.reject)
+    try {
+      executor(this.resolve, this.reject)
+    } catch (error) {
+      this.reject(error)      
+    }
   }
 
   resolve = (value) => {
@@ -54,35 +58,54 @@ class LPromise {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (res => res)
     onRejected = typeof onFulfilled === 'function' ? onRejected : (err => { throw err })
     const p2 = new LPromise((resolve, reject) => {
+      const handleResolve = () => {
+        try {
+          let result = onFulfilled(this.value)
+          // console.log('???', result)
+          return result
+        } catch (error) {
+          reject(error)
+        }
+      }
+      const handleReject = () => {
+        try {
+          return onRejected(this.reason)
+        } catch (error) {
+          reject(error)
+        }
+      }
       if (this.status === PENDING) {
         this.callback.push({
           onFulfilled: () => {
-            queueMicrotask(() => {
-              try {
-                onFulfilled(this.value)
-              } catch (error) {
-                reject(error)
-              }
-            })
+            queueMicrotask(handleResolve)
           },
           onRejected: () => {
-            queueMicrotask(() => {
-              onRejected(this.reason)
-            })
-          }
+            queueMicrotask(handleReject)
+          },
         })
       } else if (this.status === FULFILLED) {
         queueMicrotask(() => {
-          const result = onFulfilled(this.value)
-          resolve(result)
+          this.handleDeal(handleResolve(), resolve, reject)
         })
+        // queueMicrotask(() => {
+        //   resolve(handleResolve())
+        // })
       } else {
-        queueMicrotask(() => {
-          const result = onRejected(this.reason)
-          resolve(result)
-        })
+        this.handleDeal(handleReject(), resolve, reject)
       }
     })
     return p2
   }
+
+  handleDeal = (result, resolve, reject) => {
+    if (result instanceof LPromise) {
+      result.then(resolve, reject)
+    } else {
+      resolve(result)
+    }
+  }
+}
+
+LPromise.all = (arr = []) => {
+  
 }
