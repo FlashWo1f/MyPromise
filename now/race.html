@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./index.js"></script>
+  <script>
+    // 测试 .race
+    const race1 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('race1')
+      }, 1000)
+    }).then(res => {
+      console.log('race1', res)
+      return res
+    })
+
+    const race2 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        reject('race2')
+      }, 100)
+    }).then(res => {
+      console.log('race2', res)
+      return res
+    })
+
+    const race3 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('race3')
+      }, 400)
+    }).then(res => {
+      console.log('race3', res)
+      return res
+    })
+    const raceResult = LPromise
+      .race([race1, race2, race3])
+      .then(
+        res => console.log('胜利第一', res),
+        err => console.log('失败第一', err)
+      )
+    setTimeout(() => {
+      console.log('2222', race1)
+    }, 3000)
+    console.log('raceResult: ', raceResult, LPromise.race)
+  </script>
+</body>
+</html>

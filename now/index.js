@@ -126,6 +126,14 @@ class LPromise {
     })
   }
 
+  static race = (promises) => {
+    return new LPromise((resolve, reject) => {
+      promises.forEach(p => {
+        p.then(resolve, reject)
+      })
+    })
+  }
+
 }
 
 // LPromise.all = (arr = []) => {
