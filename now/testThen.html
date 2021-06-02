@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./index.js"></script>
+  <script>
+    // 测试 .then 中 this.status === pending 
+    const p7 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(33)
+      }, 1000)
+    }).then(res => {
+      console.log('delay log', res)
+      console.log('make error', errorConst)
+    }).then(null, err => console.log(err))
+  </script>
+</body>
+</html>
