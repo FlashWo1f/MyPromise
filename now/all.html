@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./index.js"></script>
+  <script>
+    // 测试 .all
+    const all1 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('all1')
+      }, 1000)
+    }).then(res => {
+      console.log('all1 log', res)
+      return res
+    })
+
+    const all2 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        reject('all2')
+      }, 700)
+    }).then(res => {
+      console.log('all2 log', res)
+      return res
+    })
+
+    const all3 = new LPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('all3')
+      }, 400)
+    }).then(res => {
+      console.log('all3 log', res)
+      return res
+    })
+    const allResult = LPromise
+      .all([all1, all2, all3])
+      .then(
+        res => console.log('全部成功', res),
+        err => console.log('有人拉跨了', err)
+      )
+    setTimeout(() => {
+      console.log('2222', all1)
+    }, 3000)
+    console.log('allResult: ', allResult, LPromise.all)
+  </script>
+</body>
+</html>
