@@ -57,7 +57,11 @@ class LPromise {
         })
       } else if (this.status === REJECTED) {
         queueMicrotask(() => {
-          this.parse(p1, realOnRejected(this.reason), resolve, reject)
+          try {
+            this.parse(p1, realOnRejected(this.reason), resolve, reject)
+          } catch (error) {
+            this.reject(error)            
+          }
         })
       } else {
         this.callbacks.push({
@@ -114,22 +118,20 @@ class LPromise {
     })
   }
 
+  // all 返回的结果按照 入参的顺序来
   static all = (promises) => {
     const values = []
+    let count = 0
     return new LPromise((resolve, reject) => {
-      promises.forEach(p => {
-        p.then(
-          value => {
-            values.push(value)
-            // 所有都 reject
-            if (values.length === promises.length) {
-              resolve(values)
-            }
-          },
-          // 但凡一个 拒绝 那么就 reject all 这个 Promise
-          reason => reject(reason)
-        )
-      })
+      for (let i = 0; i < promises.length; i++) {
+        let p = promises[i]
+        LPromise.resolve(p).then(res => {
+          values[i] = res
+          if (++count === promises.length) {
+            resolve(values)
+          }
+        }, reject)
+      }
     })
   }
 
@@ -144,3 +146,19 @@ class LPromise {
     })
   }
 }
+
+const p1 = new LPromise((resolve) => {
+  setTimeout(() => {
+    resolve(99)
+  }, 100)
+})
+
+const p2 = new LPromise((resolve, reject) => {
+  setTimeout(() => {
+    reject(77)
+  }, 20)
+})
+
+LPromise.all([p1, p2]).then(res => {
+  console.log('from all', res)
+}, err => console.log('逮到', err))
