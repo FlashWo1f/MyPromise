@@ -159,6 +159,16 @@ const p2 = new LPromise((resolve, reject) => {
   }, 20)
 })
 
-LPromise.all([p1, p2]).then(res => {
-  console.log('from all', res)
-}, err => console.log('逮到', err))
+// LPromise.all([p1, p2]).then(res => {
+//   console.log('from all', res)
+// }, err => console.log('逮到', err))
+
+export default LPromise
+
+class CancelToken {
+  constructor(cancelFn) {
+    this.promise = new Promise((resolve, reject) => {
+      cancelFn(resolve)
+    })
+  }
+}
