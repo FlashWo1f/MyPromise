@@ -14,11 +14,11 @@ class LPromise {
     this.reason = undefined
     this.callbacks = []
     this.uid = uid++
-    // try {
-    executor(this.resolve, this.reject)
-    // } catch (error) {
-    //   this.reject(error)
-    // }
+    try {
+      executor(this.resolve, this.reject)
+    } catch (error) {
+      this.reject(error)
+    }
   }
 
   resolve = (value) => {
